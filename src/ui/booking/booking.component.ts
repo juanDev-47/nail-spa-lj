@@ -94,7 +94,7 @@ export class BookingComponent implements OnInit {
     this.api.crearReserva({
       servicioId: this.selectedServicio.id,
       trabajadorId: this.selectedTrabajador.id,
-      fechaHoraInicio: `${this.selectedDate}T${this.selectedTime}:00.000Z`,
+      fechaHoraInicio: new Date(`${this.selectedDate}T${this.selectedTime}:00-05:00`).toISOString(),
       clienteNombreAnonimo: customer.nombre,
       clienteTelefonoAnonimo: customer.telefono,
       clienteCorreoAnonimo: customer.correo,

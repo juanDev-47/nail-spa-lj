@@ -6,6 +6,7 @@ export interface AdminService { id: number; nombre: string; descripcion: string 
 export interface Schedule { dia_semana: number; hora_inicio: string; hora_fin: string; }
 export interface AdminWorker { id: string; nombre: string; correo: string; telefono: string | null; disponibilidad: Schedule[]; }
 export interface AdminAppointment { id: string; clienteNombre: string; clienteTelefono: string | null; servicio: string; trabajadora: string; inicio: string; fin: string; estado: string; }
+export interface AdminCustomer { id: string; nombre: string; correo: string; telefono: string | null; fechaNacimiento: string | null; }
 
 @Injectable({ providedIn: 'root' })
 export class SessionService {
@@ -40,6 +41,8 @@ export class AdminApiService {
   guardarDisponibilidad(id: string, horarios: { diaSemana: number; horaInicio: string; horaFin: string }[]) { return this.http.put<void>(`${this.adminUrl}/trabajadores/${id}/disponibilidad`, { horarios }, this.options()); }
   citas() { return this.http.get<AdminAppointment[]>(`${this.adminUrl}/citas`, this.options()); }
   actualizarEstadoCita(id: string, estado: 'COMPLETADA' | 'CANCELADA') { return this.http.put<{ id: string; estado: string }>(`${this.adminUrl}/citas/${id}/estado`, { estado }, this.options()); }
+  clientes() { return this.http.get<AdminCustomer[]>(`${this.adminUrl}/clientes`, this.options()); }
+  actualizarCliente(id: string, body: Omit<AdminCustomer, 'id'>) { return this.http.put<AdminCustomer>(`${this.adminUrl}/clientes/${id}`, body, this.options()); }
 
   private options() { return { headers: new HttpHeaders({ Authorization: `Bearer ${this.session.token() ?? ''}` }) }; }
 }
