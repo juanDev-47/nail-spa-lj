@@ -19,6 +19,8 @@ export class BookingComponent implements OnInit {
   private availabilityRequest = 0;
   step = 1;
   servicios: Servicio[] = [];
+  filteredServicios: Servicio[] = [];
+  serviceSearch = '';
   trabajadores: Trabajador[] = [];
   selectedServicio?: Servicio;
   selectedTrabajador?: Trabajador;
@@ -49,6 +51,7 @@ export class BookingComponent implements OnInit {
     this.selectedTime = undefined;
     this.horarios = [];
     this.reservationId = '';
+    this.serviceSearch = '';
     this.customerForm.reset();
     this.loadCatalog();
   }
@@ -57,6 +60,15 @@ export class BookingComponent implements OnInit {
     this.selectedServicio = servicio;
     this.selectedTime = undefined;
     this.errorMessage = '';
+    this.changeDetector.detectChanges();
+  }
+
+  searchServices(term: string): void {
+    this.serviceSearch = term;
+    const normalized = term.trim().toLowerCase();
+    this.filteredServicios = normalized
+      ? this.servicios.filter((servicio) => servicio.nombre.toLowerCase().includes(normalized) || (servicio.descripcion ?? '').toLowerCase().includes(normalized))
+      : this.servicios;
     this.changeDetector.detectChanges();
   }
 
@@ -119,6 +131,7 @@ export class BookingComponent implements OnInit {
     ).subscribe({
       next: ({ servicios, trabajadores }) => {
         this.servicios = servicios;
+        this.filteredServicios = servicios;
         this.trabajadores = trabajadores;
         this.changeDetector.detectChanges();
       },
