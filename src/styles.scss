@@ -1,1 +1,18 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+@theme {
+	--font-display: "Georgia", "Times New Roman", serif;
+	--font-body: "Trebuchet MS", "Segoe UI", sans-serif;
+}
+
+html {
+	background: #fffaf7;
+}
+
+body {
+	margin: 0;
+	min-width: 320px;
+	background: #fffaf7;
+	color: #2e2425;
+	font-family: var(--font-body);
+}
