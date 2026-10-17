@@ -1,5 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
+import { environment } from '../environments/environment';
 
 export interface Servicio { id: number; nombre: string; descripcion: string | null; duracionMinutos: number; precio: number; }
 export interface Trabajador { id: string; nombre: string; }
@@ -16,7 +17,7 @@ export interface ReservaPayload {
 @Injectable({ providedIn: 'root' })
 export class BookingApiService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:3000/api/citas';
+  private readonly apiUrl = `${environment.apiUrl}/api/citas`;
 
   catalogo() {
     return this.http.get<{ servicios: Servicio[]; trabajadores: Trabajador[] }>(`${this.apiUrl}/catalogo`, {

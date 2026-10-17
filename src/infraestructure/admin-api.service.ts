@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
+import { environment } from '../environments/environment';
 
 export interface AdminUser { id: string; nombre: string; correo: string; rol: 'ADMIN' | 'TRABAJADOR'; }
 export interface AdminService { id: number; nombre: string; descripcion: string | null; duracion_minutos: number; precio: number; activo: boolean; }
@@ -28,8 +29,8 @@ export class SessionService {
 export class AdminApiService {
   private readonly http = inject(HttpClient);
   private readonly session = inject(SessionService);
-  private readonly authUrl = 'http://localhost:3000/api/auth';
-  private readonly adminUrl = 'http://localhost:3000/api/admin';
+  private readonly authUrl = `${environment.apiUrl}/api/auth`;
+  private readonly adminUrl = `${environment.apiUrl}/api/admin`;
 
   login(correo: string, password: string) { return this.http.post<{ token: string; usuario: AdminUser }>(`${this.authUrl}/login`, { correo, password }); }
   servicios() { return this.http.get<AdminService[]>(`${this.adminUrl}/servicios`, this.options()); }
