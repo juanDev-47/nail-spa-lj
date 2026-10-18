@@ -2,7 +2,7 @@ name: Deploy front
 
 on:
   push:
-    branches: [main]
+    branches: [trunk]
   workflow_dispatch:
 
 permissions:
