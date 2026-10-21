@@ -16,3 +16,11 @@ body {
 	color: #2e2425;
 	font-family: var(--font-body);
 }
+
+input:not([type="checkbox"], [type="radio"], [type="range"]),
+select,
+textarea,
+button,
+a[class*="border-[#4a2632]"] {
+	border-radius: 0.5rem;
+}

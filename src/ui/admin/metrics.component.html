@@ -1,0 +1,29 @@
+<section class="mt-8">
+  <h1 class="font-display text-3xl text-[#352427]">Metricas</h1>
+  @if (loading) { <p class="py-12 text-center text-[#76585a]">Calculando metricas...</p> }
+  @else if (errorMessage) { <p class="mt-6 border-l-4 border-[#b64058] bg-[#fff0ee] px-4 py-3 text-sm text-[#782e3d]">{{ errorMessage }}</p> }
+  @else {
+    <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="border border-[#dfcfca] bg-white p-5"><p class="text-xs font-bold uppercase tracking-[0.16em] text-[#8a5960]">Reservas realizadas</p><p class="mt-2 font-display text-3xl text-[#4a2632]">{{ completedCount }}</p><p class="mt-1 text-sm text-[#76585a]">{{ pendingCount }} pendientes por atender</p></div>
+      <div class="border border-[#dfcfca] bg-white p-5"><p class="text-xs font-bold uppercase tracking-[0.16em] text-[#8a5960]">Ingresos totales</p><p class="mt-2 font-display text-3xl text-[#4a2632]">{{ totalRevenue | currency:'COP':'symbol-narrow':'1.0-0' }}</p><p class="mt-1 text-sm text-[#76585a]">Solo reservas realizadas</p></div>
+      <div class="border border-[#dfcfca] bg-white p-5"><p class="text-xs font-bold uppercase tracking-[0.16em] text-[#8a5960]">Promedio mensual</p><p class="mt-2 font-display text-3xl text-[#4a2632]">{{ averageMonthlyRevenue | currency:'COP':'symbol-narrow':'1.0-0' }}</p><p class="mt-1 text-sm text-[#76585a]">Por mes con reservas realizadas</p></div>
+      <div class="border border-[#dfcfca] bg-white p-5"><p class="text-xs font-bold uppercase tracking-[0.16em] text-[#8a5960]">Tasa de cancelacion</p><p class="mt-2 font-display text-3xl text-[#4a2632]">{{ cancelledRate }}%</p><p class="mt-1 text-sm text-[#76585a]">Sobre todas las reservas</p></div>
+    </div>
+
+    <div class="mt-6 border border-[#dfcfca] bg-white p-5">
+      <h2 class="font-display text-2xl text-[#352427]">Ingresos por mes</h2><p class="text-sm text-[#76585a]">Ultimos 12 meses con reservas realizadas</p>
+      @if (months.length === 0) { <p class="mt-4 text-sm text-[#76585a]">Aun no hay reservas realizadas.</p> }
+      <ul class="mt-4 space-y-3">@for (month of months; track month.label) { <li><div class="flex items-baseline justify-between gap-3"><span class="text-sm font-bold text-[#4a2632]">{{ month.label }}</span><span class="font-display text-xl text-[#9e374d]">{{ month.total | currency:'COP':'symbol-narrow':'1.0-0' }}</span></div><p class="text-xs text-[#76585a]">{{ month.count }} {{ month.count === 1 ? 'reserva realizada' : 'reservas realizadas' }}</p><div class="mt-1 h-2 bg-[#eadbd6]"><div class="h-2 bg-[#b64058]" [style.width.%]="percent(month.total, maxMonthRevenue)"></div></div></li> }</ul>
+    </div>
+
+    <div class="mt-6 grid gap-6 lg:grid-cols-2">
+      @for (section of sections; track section.title) {
+        <div class="border border-[#dfcfca] bg-white p-5">
+          <h2 class="font-display text-2xl text-[#352427]">{{ section.title }}</h2><p class="text-sm text-[#76585a]">{{ section.subtitle }}</p>
+          @if (section.items.length === 0) { <p class="mt-4 text-sm text-[#76585a]">Sin datos todavia.</p> }
+          <ul class="mt-4 space-y-3">@for (item of section.items; track item.label) { <li><div class="flex items-baseline justify-between gap-3 text-sm"><span class="font-bold text-[#4a2632]">{{ item.label }}@if (item.detail) { <span class="ml-2 font-normal text-[#76585a]">{{ item.detail }}</span> }</span><span class="shrink-0 text-[#76585a]">{{ item.count }}@if (item.revenue > 0) { · <span class="font-bold text-[#9e374d]">{{ item.revenue | currency:'COP':'symbol-narrow':'1.0-0' }}</span> }</span></div><div class="mt-1 h-2 bg-[#eadbd6]"><div class="h-2 bg-[#b64058]" [style.width.%]="percent(item.count, maxCount(section.items))"></div></div></li> }</ul>
+        </div>
+      }
+    </div>
+  }
+</section>

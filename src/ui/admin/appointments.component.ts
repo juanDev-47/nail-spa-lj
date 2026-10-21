@@ -1,9 +1,10 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { AdminApiService, AdminAppointment } from '../../infraestructure/admin-api.service';
 
-@Component({ selector: 'app-admin-appointments', imports: [DatePipe, RouterLink], templateUrl: './appointments.component.html' })
+const normalize = (value: string) => value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+@Component({ selector: 'app-admin-appointments', imports: [DatePipe], templateUrl: './appointments.component.html' })
 export class AppointmentsComponent implements OnInit {
   private readonly api = inject(AdminApiService);
   private readonly changeDetector = inject(ChangeDetectorRef);
@@ -11,6 +12,15 @@ export class AppointmentsComponent implements OnInit {
   loading = true;
   errorMessage = '';
   updatingId = '';
+  showAll = false;
+  searchTerm = '';
+
+  get visibleCitas(): AdminAppointment[] {
+    const term = normalize(this.searchTerm.trim());
+    return this.citas.filter((cita) => (this.showAll || cita.estado === 'PENDIENTE')
+      && (!term || [cita.clienteNombre, cita.servicio, cita.trabajadora].some((value) => normalize(value).includes(term))));
+  }
+  get attendedCount(): number { return this.citas.filter((cita) => cita.estado !== 'PENDIENTE').length; }
 
   ngOnInit(): void {
     this.api.citas().subscribe({

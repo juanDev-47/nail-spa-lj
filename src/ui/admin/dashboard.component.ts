@@ -4,11 +4,13 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { finalize, timeout } from 'rxjs';
 import { AdminApiService, AdminService, AdminWorker, SessionService } from '../../infraestructure/admin-api.service';
+import { AppointmentsComponent } from './appointments.component';
+import { MetricsComponent } from './metrics.component';
 
-type Tab = 'servicios' | 'trabajadoras';
+type Tab = 'reservas' | 'metricas' | 'servicios' | 'trabajadoras';
 const DIAS = ['Domingo', 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado'];
 
-@Component({ selector: 'app-admin-dashboard', imports: [ReactiveFormsModule, CurrencyPipe, RouterLink], templateUrl: './dashboard.component.html' })
+@Component({ selector: 'app-admin-dashboard', imports: [ReactiveFormsModule, CurrencyPipe, RouterLink, AppointmentsComponent, MetricsComponent], templateUrl: './dashboard.component.html' })
 export class DashboardComponent implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly api = inject(AdminApiService);
@@ -16,7 +18,7 @@ export class DashboardComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly changeDetector = inject(ChangeDetectorRef);
   readonly dias = DIAS;
-  tab: Tab = 'servicios';
+  tab: Tab = 'reservas';
   servicios: AdminService[] = [];
   trabajadoras: AdminWorker[] = [];
   editingService?: AdminService;
@@ -57,6 +59,19 @@ export class DashboardComponent implements OnInit {
         this.success(editingId ? 'Servicio actualizado.' : 'Servicio creado.');
         this.cancelServiceEdit();
         this.changeDetector.markForCheck();
+      },
+      error: (error) => this.failure(error),
+    });
+  }
+  deleteService(service: AdminService): void {
+    if (!confirm(`¿Eliminar el servicio "${service.nombre}"? Esta accion no se puede deshacer.`)) return;
+    this.message = '';
+    this.errorMessage = '';
+    this.api.eliminarServicio(service.id).subscribe({
+      next: () => {
+        if (this.editingService?.id === service.id) this.cancelServiceEdit();
+        this.success('Servicio eliminado.');
+        this.refresh();
       },
       error: (error) => this.failure(error),
     });

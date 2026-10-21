@@ -6,7 +6,7 @@ export interface AdminUser { id: string; nombre: string; correo: string; rol: 'A
 export interface AdminService { id: number; nombre: string; descripcion: string | null; duracion_minutos: number; precio: number; activo: boolean; }
 export interface Schedule { dia_semana: number; hora_inicio: string; hora_fin: string; }
 export interface AdminWorker { id: string; nombre: string; correo: string; telefono: string | null; disponibilidad: Schedule[]; }
-export interface AdminAppointment { id: string; clienteNombre: string; clienteTelefono: string | null; servicio: string; trabajadora: string; inicio: string; fin: string; estado: string; }
+export interface AdminAppointment { id: string; clienteNombre: string; clienteTelefono: string | null; servicio: string; precio: number; trabajadora: string; inicio: string; fin: string; estado: string; }
 export interface AdminCustomer { id: string; nombre: string; correo: string; telefono: string | null; fechaNacimiento: string | null; }
 
 @Injectable({ providedIn: 'root' })
@@ -36,6 +36,7 @@ export class AdminApiService {
   servicios() { return this.http.get<AdminService[]>(`${this.adminUrl}/servicios`, this.options()); }
   crearServicio(body: { nombre: string; descripcion: string; duracionMinutos: number; precio: number }) { return this.http.post<AdminService>(`${this.adminUrl}/servicios`, body, this.options()); }
   actualizarServicio(id: number, body: { nombre: string; descripcion: string; duracionMinutos: number; precio: number; activo: boolean }) { return this.http.put<AdminService>(`${this.adminUrl}/servicios/${id}`, body, this.options()); }
+  eliminarServicio(id: number) { return this.http.delete<void>(`${this.adminUrl}/servicios/${id}`, this.options()); }
   trabajadores() { return this.http.get<AdminWorker[]>(`${this.adminUrl}/trabajadores`, this.options()); }
   crearTrabajador(body: { nombre: string; correo: string; password: string; telefono: string }) { return this.http.post<AdminWorker>(`${this.adminUrl}/trabajadores`, body, this.options()); }
   actualizarTrabajador(id: string, body: { nombre: string; correo: string; telefono: string; password?: string }) { return this.http.put<AdminWorker>(`${this.adminUrl}/trabajadores/${id}`, body, this.options()); }
