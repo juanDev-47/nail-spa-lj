@@ -11,7 +11,6 @@ export interface ReservaPayload {
   fechaHoraInicio: string;
   clienteNombreAnonimo: string;
   clienteTelefonoAnonimo: string;
-  clienteCorreoAnonimo: string;
 }
 
 @Injectable({ providedIn: 'root' })

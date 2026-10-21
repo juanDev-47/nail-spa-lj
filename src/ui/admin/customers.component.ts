@@ -13,7 +13,7 @@ export class CustomersComponent implements OnInit {
   loading = true;
   errorMessage = '';
   message = '';
-  readonly form = this.formBuilder.nonNullable.group({ nombre: ['', Validators.required], correo: ['', [Validators.required, Validators.email]], telefono: [''], fechaNacimiento: [''] });
+  readonly form = this.formBuilder.nonNullable.group({ nombre: ['', Validators.required], correo: ['', Validators.email], telefono: [''], fechaNacimiento: [''] });
 
   ngOnInit(): void {
     this.api.clientes().subscribe({
@@ -24,7 +24,7 @@ export class CustomersComponent implements OnInit {
 
   select(cliente: AdminCustomer): void {
     this.selected = cliente;
-    this.form.setValue({ nombre: cliente.nombre, correo: cliente.correo, telefono: cliente.telefono ?? '', fechaNacimiento: cliente.fechaNacimiento ?? '' });
+    this.form.setValue({ nombre: cliente.nombre, correo: cliente.correo ?? '', telefono: cliente.telefono ?? '', fechaNacimiento: cliente.fechaNacimiento ?? '' });
     this.message = '';
     this.changeDetector.detectChanges();
   }

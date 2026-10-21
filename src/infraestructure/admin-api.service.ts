@@ -7,7 +7,7 @@ export interface AdminService { id: number; nombre: string; descripcion: string 
 export interface Schedule { dia_semana: number; hora_inicio: string; hora_fin: string; }
 export interface AdminWorker { id: string; nombre: string; correo: string; telefono: string | null; disponibilidad: Schedule[]; }
 export interface AdminAppointment { id: string; clienteNombre: string; clienteTelefono: string | null; servicio: string; precio: number; trabajadora: string; inicio: string; fin: string; estado: string; }
-export interface AdminCustomer { id: string; nombre: string; correo: string; telefono: string | null; fechaNacimiento: string | null; }
+export interface AdminCustomer { id: string; nombre: string; correo: string | null; telefono: string | null; fechaNacimiento: string | null; }
 
 @Injectable({ providedIn: 'root' })
 export class SessionService {

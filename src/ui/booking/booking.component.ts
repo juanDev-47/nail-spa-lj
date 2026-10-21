@@ -36,7 +36,6 @@ export class BookingComponent implements OnInit {
   readonly customerForm = this.formBuilder.nonNullable.group({
     nombre: ['', [Validators.required, Validators.minLength(2)]],
     telefono: ['', [Validators.required, Validators.minLength(7)]],
-    correo: ['', [Validators.required, Validators.email]],
   });
 
   ngOnInit(): void { this.loadCatalog(); }
@@ -60,6 +59,14 @@ export class BookingComponent implements OnInit {
     this.selectedServicio = servicio;
     this.selectedTime = undefined;
     this.errorMessage = '';
+    this.changeDetector.detectChanges();
+  }
+
+  continueWithService(servicio: Servicio): void {
+    this.selectedServicio = servicio;
+    this.selectedTime = undefined;
+    this.errorMessage = '';
+    this.step = 2;
     this.changeDetector.detectChanges();
   }
 
@@ -92,8 +99,8 @@ export class BookingComponent implements OnInit {
     this.changeDetector.detectChanges();
   }
 
-  continueToSchedule(): void { if (this.selectedServicio) this.step = 2; }
-  continueToDetails(): void { if (this.selectedTrabajador && this.selectedTime) this.step = 3; }
+  continueToSchedule(): void { if (this.selectedServicio) { this.step = 2; this.changeDetector.detectChanges(); } }
+  continueToDetails(): void { if (this.selectedTrabajador && this.selectedTime) { this.step = 3; this.changeDetector.detectChanges(); } }
 
   submit(): void {
     if (this.customerForm.invalid || !this.selectedServicio || !this.selectedTrabajador || !this.selectedTime) {
@@ -109,7 +116,6 @@ export class BookingComponent implements OnInit {
       fechaHoraInicio: new Date(`${this.selectedDate}T${this.selectedTime}:00-05:00`).toISOString(),
       clienteNombreAnonimo: customer.nombre,
       clienteTelefonoAnonimo: customer.telefono,
-      clienteCorreoAnonimo: customer.correo,
     }).pipe(
       timeout(15_000),
       finalize(() => { this.submitting = false; this.changeDetector.detectChanges(); }),
