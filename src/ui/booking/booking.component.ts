@@ -33,9 +33,11 @@ export class BookingComponent implements OnInit {
   submitting = false;
   errorMessage = '';
   reservationId = '';
+  confirmacionWhatsapp?: 'aceptada' | 'no_confirmada';
   readonly customerForm = this.formBuilder.nonNullable.group({
-    nombre: ['', [Validators.required, Validators.minLength(2)]],
-    telefono: ['', [Validators.required, Validators.minLength(7)]],
+    nombre: ['', [Validators.required, Validators.minLength(2), Validators.pattern(/.*\S.*/)]],
+    telefono: ['', [Validators.required, Validators.pattern(/^\s*(?:\+?57[\s()-]*)?3(?:[\s()-]*\d){9}\s*$/)]],
+    consentimientoWhatsapp: [false, Validators.requiredTrue],
   });
 
   ngOnInit(): void { this.loadCatalog(); }
@@ -50,6 +52,7 @@ export class BookingComponent implements OnInit {
     this.selectedTime = undefined;
     this.horarios = [];
     this.reservationId = '';
+    this.confirmacionWhatsapp = undefined;
     this.serviceSearch = '';
     this.customerForm.reset();
     this.loadCatalog();
@@ -116,11 +119,12 @@ export class BookingComponent implements OnInit {
       fechaHoraInicio: new Date(`${this.selectedDate}T${this.selectedTime}:00-05:00`).toISOString(),
       clienteNombreAnonimo: customer.nombre,
       clienteTelefonoAnonimo: customer.telefono,
+      consentimientoWhatsapp: customer.consentimientoWhatsapp,
     }).pipe(
-      timeout(15_000),
+      timeout(35_000),
       finalize(() => { this.submitting = false; this.changeDetector.detectChanges(); }),
     ).subscribe({
-      next: ({ id }) => { this.reservationId = id; this.step = 4; this.changeDetector.detectChanges(); },
+      next: ({ id, confirmacionWhatsapp }) => { this.reservationId = id; this.confirmacionWhatsapp = confirmacionWhatsapp; this.step = 4; this.changeDetector.detectChanges(); },
       error: (error: { error?: { message?: string } }) => {
         this.errorMessage = error.error?.message ?? 'No pudimos confirmar la reserva. Intenta con otro horario.';
         this.changeDetector.detectChanges();

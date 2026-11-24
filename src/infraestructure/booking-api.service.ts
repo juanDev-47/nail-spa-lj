@@ -11,6 +11,7 @@ export interface ReservaPayload {
   fechaHoraInicio: string;
   clienteNombreAnonimo: string;
   clienteTelefonoAnonimo: string;
+  consentimientoWhatsapp: boolean;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -29,5 +30,5 @@ export class BookingApiService {
     return this.http.get<Disponibilidad>(`${this.apiUrl}/disponibilidad`, { params });
   }
 
-  crearReserva(payload: ReservaPayload) { return this.http.post<{ id: string }>(this.apiUrl, payload); }
+  crearReserva(payload: ReservaPayload) { return this.http.post<{ id: string; confirmacionWhatsapp: 'aceptada' | 'no_confirmada' }>(this.apiUrl, payload); }
 }

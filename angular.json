@@ -27,6 +27,11 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "LOGO_SPA.jpeg",
+                "input": "src/assets",
+                "output": "assets"
               }
             ],
             "styles": [

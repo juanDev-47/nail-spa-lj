@@ -5,6 +5,7 @@ Cliente Angular standalone para LJ Nail Spa. La guia de rutas de interfaz previs
 ## Componentes principales
 
 - `src/ui/booking/booking.component.*`: flujo de reserva, consulta catalogo/disponibilidad y envio de la reserva.
+- `src/ui/privacy/privacy.component.*`: politica de privacidad y canal de contacto para solicitudes sobre datos personales.
 - `src/ui/admin/login.component.*`: inicio de sesion de administradores.
 - `src/ui/admin/dashboard.component.*`: servicios, trabajadoras y horarios semanales.
 - `src/ui/admin/appointments.component.*`: listado de reservas y cambios de estado.
@@ -12,9 +13,11 @@ Cliente Angular standalone para LJ Nail Spa. La guia de rutas de interfaz previs
 - `src/infraestructure/booking-api.service.ts`: cliente HTTP de catalogo, disponibilidad y reservas.
 - `src/infraestructure/admin-api.service.ts`: cliente HTTP administrativo y almacenamiento local del token.
 
+Al reservar, se solicita un celular colombiano y la autorizacion para recibir la confirmacion por WhatsApp de Siempre Lindas LJ. Si no se puede confirmar el envio, se informa que la cita ya quedo guardada para evitar una reserva duplicada. La configuracion y envio de la plantilla se realizan en el backend.
+
 ## Estado del router
 
-Las vistas no estan conectadas todavia: `src/ui/app/app.routes.ts` exporta `routes = []`. Las URLs usadas por los enlaces son rutas previstas, no rutas funcionales hasta registrar sus componentes y asociar el `adminGuard` donde corresponda.
+Las rutas activas se definen en `src/app.routes.ts`. La politica de privacidad esta disponible en `/politica-de-privacidad` y enlazada desde la reserva. El plazo de conservacion debe ser definido por la responsable y actualizado en la politica.
 
 ## Comandos
 
